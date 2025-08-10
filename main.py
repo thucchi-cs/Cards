@@ -6,7 +6,7 @@ WIDTH = 1200
 HEIGHT = 700
 
 pygame.font.init()
-font = pygame.font.Font("./assets/fonts/Orbitron-Medium.ttf", 13)
+font = pygame.font.Font("./assets/fonts/Orbitron-Medium.ttf", 26)
 cardCount = font.render("hey", True, "white")
 
 pygame.init()
