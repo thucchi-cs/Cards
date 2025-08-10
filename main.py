@@ -132,6 +132,10 @@ pygame.init()
 pygame.font.init()
 font = pygame.font.Font("./assets/fonts/Orbitron-Medium.ttf", 26)
 
+pygame.font.init()
+font = pygame.font.Font("./assets/fonts/Orbitron-Medium.ttf", 26)
+cardCount = font.render("hey", True, "white")
+
 bg = pygame.image.load("./assets/graphics/felt.jpg")
 
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -167,10 +171,13 @@ def main():
     server_thread.start()
 
     run = True
+    run = True
     while run:
+        # Update fps
         clock.tick(FPS)
 
         for event in pygame.event.get():
+            # Check to close game
             if event.type == pygame.QUIT:
                 run = False
 
@@ -178,21 +185,17 @@ def main():
                 if event.key == pygame.K_q:
                     run = False
 
-        SCREEN.fill((0, 0, 0))
-        SCREEN.blit(bg, (0, 0))
+        # Draw on screen
+        SCREEN.fill((0,0,0))
+
+        SCREEN.blit(bg, (0,0))
 
         cardCount = player.getCardCount()
-        text = f"You have {cardCount} card{'s' if cardCount != 1 else ''}"
-        cardCount_render = font.render(text, True, "white")
-        SCREEN.blit(cardCount_render, (0, 0))
+        cardCount = font.render(f"You have {str(cardCount)} card{"" if cardCount == 1 else "s"}", True, "white")
+        SCREEN.blit(cardCount, (0,0))
 
         pygame.display.flip()
-
-    # Stop server and clean up
-    server_running = False
-    server_thread.join()
-    pygame.quit()
-    print("Game and server exited cleanly.")
+        print("game exited cleanly")
 
 if __name__ == "__main__":
     main()
