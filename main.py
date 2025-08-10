@@ -181,7 +181,7 @@ FPS = 60
 clock = pygame.time.Clock()
 
 # Your game initialization
-Board.house.shufleHand()
+Board.house.shuffleHand()
 
 for card in Board.house.hand:
     print(card, end="  ")

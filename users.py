@@ -28,7 +28,7 @@ class User():
     def remove_card(self, card: Card):
         self.hand.remove(card)
 
-    def shufleHand(self):
+    def shuffleHand(self):
         hand = self.hand.sprites()
         shuffle(hand)
         self.hand.empty()
