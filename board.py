@@ -5,6 +5,7 @@ from users import User
 class Board():
     cards = Card.generate_cards()
     house = User(cards)
+    discard = User(cards)
     users = []
     player_num = 3 # get user input
     cards_per_player = 7 # get user input
