@@ -1,9 +1,10 @@
 import pygame
 import socket
+import threading
 from _thread import start_new_thread
-from board import Board
+from board import Board  # Your Board module, assumed to exist
 
-# ____________________________________________________________________________________
+# ------------------------ Server utilities ------------------------
 
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -30,7 +31,6 @@ def int_to_base36(num: int) -> str:
 
 def encode_ip(ip: str) -> str:
     return int_to_base36(ip_to_int(ip))
-
 
 def initialize_game_from_player(conn):
     try:
@@ -60,7 +60,6 @@ def initialize_game_from_player(conn):
         print("Error:", e)
         return False
 
-
 def client_thread(conn, player_id):
     conn.sendall(f"You are Player {player_id}\n".encode())
 
@@ -80,7 +79,13 @@ def client_thread(conn, player_id):
 
     conn.close()
 
-if __name__ == "__main__":
+# ------------------------ Server Thread ------------------------
+
+server_running = True  # global flag to control server loop
+
+def server_loop():
+    global server_running
+
     server_ip = get_local_ip()
     join_code = encode_ip(server_ip)
     port = 5000
@@ -95,8 +100,14 @@ if __name__ == "__main__":
     print("Waiting for players to connect...\n")
 
     player_id = 1
-    while True:
-        conn, addr = s.accept()
+
+    s.settimeout(1.0)  # 1 second timeout to allow clean shutdown checking
+
+    while server_running:
+        try:
+            conn, addr = s.accept()
+        except socket.timeout:
+            continue  # check server_running flag again
 
         if Board.player_num > 0 and player_id > Board.player_num:
             conn.sendall(b"Game is full. Try again later.\n")
@@ -108,28 +119,27 @@ if __name__ == "__main__":
         start_new_thread(client_thread, (conn, player_id))
         player_id += 1
 
-# ____________________________________________________________________________________
+    s.close()
+    print("Server stopped.")
 
-# Screen setup
+# ------------------------ Pygame setup ------------------------
+
 WIDTH = 1200
 HEIGHT = 700
 
+pygame.init()
 pygame.font.init()
 font = pygame.font.Font("./assets/fonts/Orbitron-Medium.ttf", 26)
-cardCount = font.render("hey", True, "white")
 
 bg = pygame.image.load("./assets/graphics/felt.jpg")
 
-pygame.init()
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Cards")
 
-# Frames timing
 FPS = 60
-
-# Time
 clock = pygame.time.Clock()
 
+# Your game initialization
 Board.house.shufleHand()
 
 for card in Board.house.hand:
@@ -146,28 +156,42 @@ print("\nplayer")
 for card in Board.users[0].hand:
     print(card, end="  ")
 
-# Runner variable
-run = True
-while run:
-    # Update fps
-    clock.tick(FPS)
+# ------------------------ Main ------------------------
 
-    for event in pygame.event.get():
-        # Check to close game
-        if event.type == pygame.QUIT:
-            run = False
+def main():
+    global server_running
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
+    # Start server thread
+    server_thread = threading.Thread(target=server_loop)
+    server_thread.start()
+
+    run = True
+    while run:
+        clock.tick(FPS)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 run = False
 
-    # Draw on screen
-    SCREEN.fill((0,0,0))
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    run = False
 
-    SCREEN.blit(bg, (0,0))
+        SCREEN.fill((0, 0, 0))
+        SCREEN.blit(bg, (0, 0))
 
-    cardCount = player.getCardCount()
-    cardCount = font.render(f"You have {str(cardCount)} card{"" if cardCount == 1 else "s"}", True, "white")
-    SCREEN.blit(cardCount, (0,0))
+        cardCount = player.getCardCount()
+        text = f"You have {cardCount} card{'s' if cardCount != 1 else ''}"
+        cardCount_render = font.render(text, True, "white")
+        SCREEN.blit(cardCount_render, (0, 0))
 
-    pygame.display.flip()
+        pygame.display.flip()
+
+    # Stop server and clean up
+    server_running = False
+    server_thread.join()
+    pygame.quit()
+    print("Game and server exited cleanly.")
+
+if __name__ == "__main__":
+    main()
