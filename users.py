@@ -24,7 +24,7 @@ class User():
 
     def add_card(self, card: Card):
         self.hand.add(card)
-    
+
     def remove_card(self, card: Card):
         self.hand.remove(card)
 
@@ -33,3 +33,6 @@ class User():
         shuffle(hand)
         self.hand.empty()
         self.hand.add(hand)
+
+    def getCardCount(self):
+        return len(self.hand)

@@ -22,3 +22,4 @@ class Board():
     def add_player():
         Board.users.append(User())
         Board.dealCards(Board.users[-1], Board.cards_per_player)
+        return Board.users[-1]

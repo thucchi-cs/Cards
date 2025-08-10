@@ -9,6 +9,8 @@ pygame.font.init()
 font = pygame.font.Font("./assets/fonts/Orbitron-Medium.ttf", 26)
 cardCount = font.render("hey", True, "white")
 
+bg = pygame.image.load("./assets/graphics/felt.jpg")
+
 pygame.init()
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Cards")
@@ -24,7 +26,9 @@ Board.house.shufleHand()
 for card in Board.house.hand:
     print(card, end="  ")
 
-Board.add_player()
+player = Board.add_player()
+player2 = Board.add_player()
+
 print("\nHouse")
 for card in Board.house.hand:
     print(card, end="  ")
@@ -51,6 +55,14 @@ while run:
     # Draw on screen
     SCREEN.fill((0,0,0))
 
+    SCREEN.blit(bg, (0,0))
+
+    cardCount = player.getCardCount()
+    cardCount = font.render(f"You have {str(cardCount)} card{"" if cardCount == 1 else "s"}", True, "white")
     SCREEN.blit(cardCount, (0,0))
+
+
+
+    player.play_card(player2, Board.cards[-1])
 
     pygame.display.flip()
