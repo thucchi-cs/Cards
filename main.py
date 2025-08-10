@@ -61,8 +61,4 @@ while run:
     cardCount = font.render(f"You have {str(cardCount)} card{"" if cardCount == 1 else "s"}", True, "white")
     SCREEN.blit(cardCount, (0,0))
 
-
-
-    player.play_card(player2, Board.cards[-1])
-
     pygame.display.flip()
