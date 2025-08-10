@@ -91,6 +91,7 @@ def server_loop():
     port = 5000
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Add this line
     s.bind((server_ip, port))
     s.listen(5)
 
