@@ -3,7 +3,7 @@ import socket
 import threading
 from _thread import start_new_thread
 from board import Board  # Your Board module, assumed to exist
-import json
+import json, time
 
 # ------------------------ Server utilities ------------------------
 
@@ -155,6 +155,10 @@ def server_loop():
         print(f"Player {player_id} connected from {addr}")
         start_new_thread(client_thread, (conn, player_id))
         player_id += 1
+        time.sleep(0.05)
 
     s.close()
     print("Server stopped.")
+
+if __name__ == "__main__":
+    server_loop()
