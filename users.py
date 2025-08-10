@@ -3,6 +3,7 @@ from cards import Card
 
 class User():
     player_count = 0
+    id: UUID = uuid4()
 
     def __init__(self, hand: list):
         super().__init__()
