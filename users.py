@@ -12,13 +12,15 @@ class User():
         self.hand = hand
 
     def play_card(self, to: "User", card: Card):
-        pass
+        self.remove_card(card)
+        to.add_card(card)
 
     def take_card(self, _from: "User", card: Card):
-        pass
+        self.add_card(card)
+        _from.remove_card(card)
 
     def add_card(self, card: Card):
-        pass
+        self.hand.append(card)
     
     def remove_card(self, card: Card):
-        pass
+        self.hand.remove(card)

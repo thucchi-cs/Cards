@@ -10,10 +10,13 @@ SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Cards")
 
 # Frames timing
-FPS = 30
+FPS = 60
 
 # Time
 clock = pygame.time.Clock()
+
+for card in Board.cards:
+    print(card, end="  ")
 
 # Runner variable
 run = True
