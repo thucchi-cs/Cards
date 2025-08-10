@@ -15,7 +15,18 @@ FPS = 60
 # Time
 clock = pygame.time.Clock()
 
-for card in Board.cards:
+Board.house.shufleHand()
+
+for card in Board.house.hand:
+    print(card, end="  ")
+
+Board.add_player()
+print("\nHouse")
+for card in Board.house.hand:
+    print(card, end="  ")
+
+print("\nplayer")
+for card in Board.users[0].hand:
     print(card, end="  ")
 
 # Runner variable
