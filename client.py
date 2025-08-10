@@ -1,6 +1,8 @@
 import socket
 import pygame
 import threading
+import json
+import threading
 
 # Network functions (decode join code, same as before)
 def base36_to_int(code: str) -> int:
@@ -12,6 +14,22 @@ def int_to_ip(num: int) -> str:
 def decode_join_code(code: str) -> str:
     return int_to_ip(base36_to_int(code.strip().upper()))
 
+def listen_for_updates(sock):
+    while True:
+        try:
+            data = sock.recv(1024).decode()
+            if not data:
+                break
+            try:
+                # Try parsing as JSON
+                packet = json.loads(data)
+                if packet.get("type") == "update_state":
+                    print("\n📡 Game state updated:", packet["state"])
+            except json.JSONDecodeError:
+                # Otherwise just treat it as plain text
+                print(data, end='')
+        except:
+            break
 # Pygame setup
 pygame.init()
 WIDTH, HEIGHT = 600, 400
