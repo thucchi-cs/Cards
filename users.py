@@ -19,6 +19,9 @@ class User():
 
     def add_card(self, card: Card):
         pass
-    
+
     def remove_card(self, card: Card):
         pass
+
+    def shufleHand():
+        shuffle(cards)

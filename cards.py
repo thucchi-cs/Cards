@@ -1,8 +1,9 @@
 import pygame
+from random import *
 
 class Card(pygame.sprite.Sprite):
     suits = ["spade", "heart", "diamond", "club"]
-    
+
     def __init__(self, suit: str, value: int):
         super().__init__()
 
@@ -17,6 +18,3 @@ class Card(pygame.sprite.Sprite):
                 cards.append(Card(s, val))
 
         return cards
-
-    def shuffle_cards():
-        pass

@@ -10,7 +10,7 @@ SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Cards")
 
 # Frames timing
-FPS = 30
+FPS = 60
 
 # Time
 clock = pygame.time.Clock()
@@ -20,12 +20,12 @@ run = True
 while run:
     # Update fps
     clock.tick(FPS)
-    
+
     for event in pygame.event.get():
         # Check to close game
         if event.type == pygame.QUIT:
             run = False
-        
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
                 run = False
