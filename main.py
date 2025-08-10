@@ -5,6 +5,10 @@ from board import Board
 WIDTH = 1200
 HEIGHT = 700
 
+pygame.font.init()
+font = pygame.font.Font("./assets/fonts/Orbitron-Medium.ttf", 13)
+cardCount = font.render("hey", True, "white")
+
 pygame.init()
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Cards")
@@ -15,7 +19,18 @@ FPS = 60
 # Time
 clock = pygame.time.Clock()
 
-for card in Board.cards:
+Board.house.shufleHand()
+
+for card in Board.house.hand:
+    print(card, end="  ")
+
+Board.add_player()
+print("\nHouse")
+for card in Board.house.hand:
+    print(card, end="  ")
+
+print("\nplayer")
+for card in Board.users[0].hand:
     print(card, end="  ")
 
 # Runner variable
@@ -35,5 +50,7 @@ while run:
 
     # Draw on screen
     SCREEN.fill((0,0,0))
+
+    SCREEN.blit(cardCount, (0,0))
 
     pygame.display.flip()
