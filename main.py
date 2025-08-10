@@ -65,7 +65,6 @@ def clicked(button, curplayer):
         nextUser = (curUser + 1) % (len(Board.users))
         for user in Board.users:
             user.onTurn = False
-            print(user.onTurn)
         Board.users[nextUser].onTurn = True
         print(nextUser, curUser)
         time.sleep(0.3)
@@ -106,7 +105,8 @@ def main():
         SCREEN.fill((0,0,0))
 
         SCREEN.blit(bg, (0,0))
-        SCREEN.blit(button, (100, 100))
+        SCREEN.blit(button, (150, 100))
+        btnRect.topleft = (150,100)
         for c in Board.playing.hand:
             c.draw(SCREEN)
             if c.clicked():
