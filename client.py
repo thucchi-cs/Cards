@@ -3,6 +3,7 @@ import pygame
 import threading
 import json
 import threading
+from board import Board
 
 # Network functions (decode join code, same as before)
 def base36_to_int(code: str) -> int:
@@ -62,56 +63,73 @@ def listen_to_server(sock):
             add_message("[Connection lost]")
             break
 
+# ------------------------ Pygame setup ------------------------
+
+WIDTH = 1200
+HEIGHT = 700
+
+pygame.init()
+pygame.font.init()
+font = pygame.font.Font("./assets/fonts/Orbitron-Medium.ttf", 26)
+
+pygame.font.init()
+font = pygame.font.Font("./assets/fonts/Orbitron-Medium.ttf", 26)
+cardCount = font.render("hey", True, "white")
+
+bg = pygame.image.load("./assets/graphics/felt.jpg")
+
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Cards")
+
+FPS = 60
+clock = pygame.time.Clock()
+
+# Your game initialization
+Board.house.shuffleHand()
+
+for card in Board.house.hand:
+    print(card, end="  ")
+
+player = Board.add_player()
+player2 = Board.add_player()
+
+print("\nHouse")
+for card in Board.house.hand:
+    print(card, end="  ")
+
+print("\nplayer")
+for card in Board.users[0].hand:
+    print(card, end="  ")
+
+
 def main():
-    global input_text
 
-    join_code = input("Enter join code to connect: ").strip()
-    server_ip = decode_join_code(join_code)
-    port = 5000
+    run = True
+    while run:
+        # Update fps
+        clock.tick(FPS)
 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        sock.connect((server_ip, port))
-    except Exception as e:
-        print(f"Could not connect: {e}")
-        return
-
-    threading.Thread(target=listen_to_server, args=(sock,), daemon=True).start()
-
-    running = True
-    while running:
         for event in pygame.event.get():
+            # Check to close game
             if event.type == pygame.QUIT:
-                running = False
-                break
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    if input_text.strip():
-                        sock.sendall(input_text.encode())
-                        input_text = ''
-                elif event.key == pygame.K_BACKSPACE:
-                    input_text = input_text[:-1]
-                else:
-                    input_text += event.unicode
+                run = False
 
-        screen.fill((30, 30, 30))
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    run = False
 
-        # Render messages
-        y = 10
-        for msg in messages:
-            msg_surface = font.render(msg, True, (255, 255, 255))
-            screen.blit(msg_surface, (20, y))
-            y += 22
+        # Draw on screen
+        SCREEN.fill((0,0,0))
 
-        # Render input box
-        pygame.draw.rect(screen, (50, 50, 50), input_box)
-        txt_surface = font.render(input_text, True, (255, 255, 255))
-        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+        SCREEN.blit(bg, (0,0))
+
+        cardCount = player.getCardCount()
+        cardCount = font.render(f"You have {str(cardCount)} card{"" if cardCount == 1 else "s"}", True, "white")
+        SCREEN.blit(cardCount, (0,0))
 
         pygame.display.flip()
-        clock.tick(30)
+        print("game exited cleanly")
 
-    sock.close()
     pygame.quit()
 
 if __name__ == "__main__":
