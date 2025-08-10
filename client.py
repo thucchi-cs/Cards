@@ -103,6 +103,21 @@ for card in Board.users[0].hand:
 
 
 def main():
+    global input_text
+
+    join_code = input("Enter join code to connect: ").strip()
+    server_ip = decode_join_code(join_code)
+    port = 5000
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        sock.connect((server_ip, port))
+    except Exception as e:
+        print(f"Could not connect: {e}")
+        return
+
+    threading.Thread(target=listen_to_server, args=(sock,), daemon=True).start()
+
 
     run = True
     while run:
