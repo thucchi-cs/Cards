@@ -20,7 +20,7 @@ Board.house.shufleHand()
 for card in Board.house.hand:
     print(card, end="  ")
 
-Board.add_player()
+Board.add_player()2
 print("\nHouse")
 for card in Board.house.hand:
     print(card, end="  ")
