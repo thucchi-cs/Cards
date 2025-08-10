@@ -9,7 +9,7 @@ class Card(pygame.sprite.Sprite):
         "diamond": "assets/graphics/diamond.png",
         "club": "assets/graphics/club.png"
     }
-    
+
     def __init__(self, suit: str, value: int, font):
         super().__init__()
 
@@ -34,8 +34,8 @@ class Card(pygame.sprite.Sprite):
         return cards
 
     def __str__(self):
-        return str(self.value) + " " + self.suit 
-    
+        return str(self.value) + " " + self.suit
+
     def draw(self, screen):
         if self.show:
             screen.blit(self.image, self.rect.topleft)
