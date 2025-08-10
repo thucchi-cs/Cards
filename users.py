@@ -7,12 +7,12 @@ class User():
     player_count = 0
     id: uuid = uuid.uuid4()
 
-    def __init__(self, hand: list):
+    def __init__(self, hand: list=[]):
         super().__init__()
 
         User.player_count += 1
         self.id = User.player_count
-        self.hand = hand
+        self.hand = pygame.sprite.Group(hand)
 
     def play_card(self, to: "User", card: Card):
         self.remove_card(card)
@@ -23,10 +23,13 @@ class User():
         _from.remove_card(card)
 
     def add_card(self, card: Card):
-        self.hand.append(card)
+        self.hand.add(card)
     
     def remove_card(self, card: Card):
         self.hand.remove(card)
 
     def shufleHand(self):
-        shuffle(self.hand)
+        hand = self.hand.sprites()
+        shuffle(hand)
+        self.hand.empty()
+        self.hand.add(hand)
