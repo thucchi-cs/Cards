@@ -1,6 +1,6 @@
 import pygame
 from cards import Card
-import uuid
+import uuid, time
 from random import shuffle
 
 class User():
@@ -38,9 +38,15 @@ class User():
     def getCardCount(self):
         return len(self.hand)
     
-    def update(self, playing):
+    def update(self, board):
         if self.onTurn:
             for c in self.hand:
                 c.show = True
                 if c.clicked():
-                    self.play_card(playing, c)
+                    self.play_card(board.playing, c)
+                    time.sleep(0.3)
+            if len(board.house.hand) > 0:
+                c = board.house.hand.sprites()[0]
+                if c.clicked():
+                    self.take_card(board.house, c)
+                    time.sleep(0.3)
