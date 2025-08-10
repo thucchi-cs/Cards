@@ -50,3 +50,6 @@ class User():
                 if c.clicked():
                     self.take_card(board.house, c)
                     time.sleep(0.3)
+        else:
+            for c in self.hand:
+                c.show = False

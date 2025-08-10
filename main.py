@@ -62,25 +62,13 @@ def clicked(button, curplayer):
     pos = pygame.mouse.get_pos()
     if pygame.mouse.get_pressed()[0] and button.collidepoint(pos):
         curUser = Board.users.index(curplayer)
-        nextUser = (curUser + 1) % len(Board.users)
-        time.sleep(0.3)
+        nextUser = (curUser + 1) % (len(Board.users))
         for user in Board.users:
             user.onTurn = False
+            print(user.onTurn)
         Board.users[nextUser].onTurn = True
-        print(Board.users[nextUser].id)
-        return True
-    return False
-
-def clicked(button, curplayer):
-    pos = pygame.mouse.get_pos()
-    if pygame.mouse.get_pressed()[0] and button.collidepoint(pos):
-        curUser = Board.users.index(curplayer)
-        nextUser = (curUser + 1) % len(Board.users)
+        print(nextUser, curUser)
         time.sleep(0.3)
-        for user in Board.users:
-            user.onTurn = False
-        Board.users[nextUser].onTurn = True
-        print(Board.users[nextUser].id)
         return True
     return False
 
@@ -127,10 +115,10 @@ def main():
             p.update(Board)
             if p.onTurn:
                 curplayer = p
-                clicked(btnRect, curplayer)
             for c in p.hand:
                 c.draw(SCREEN)
 
+        clicked(btnRect, curplayer)
 
         for c in Board.house.hand:
             c.draw(SCREEN)
