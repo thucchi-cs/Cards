@@ -1,5 +1,6 @@
 import pygame
 from board import Board
+import time
 
 # ------------------------ Pygame setup ------------------------
 
@@ -13,6 +14,8 @@ font = pygame.font.Font("./assets/fonts/Orbitron-Medium.ttf", 26)
 cardCount = font.render("hey", True, "white")
 
 bg = pygame.image.load("./assets/graphics/felt.jpg")
+button = pygame.image.load("./assets/graphics/button.png")
+btnRect = button.get_rect()
 
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Cards")
@@ -56,6 +59,19 @@ for c in player3.hand:
 
 player2.onTurn = True
 
+def clicked(button, curplayer):
+    pos = pygame.mouse.get_pos()
+    if pygame.mouse.get_pressed()[0] and button.collidepoint(pos):
+        curUser = Board.users.index(curplayer)
+        nextUser = (curUser + 1) % len(Board.users)
+        time.sleep(0.3)
+        for user in Board.users:
+            user.onTurn = False
+        Board.users[nextUser].onTurn = True
+        print(Board.users[nextUser].id)
+        return True
+    return False
+
 def main():
     run = True
     while run:
@@ -76,10 +92,12 @@ def main():
         SCREEN.fill((0,0,0))
 
         SCREEN.blit(bg, (0,0))
+        SCREEN.blit(button, (100, 100))
         for p in Board.users:
             p.update(Board.playing)
             if p.onTurn:
                 curplayer = p
+                clicked(btnRect, curplayer)
             for c in p.hand:
                 c.draw(SCREEN)
 
