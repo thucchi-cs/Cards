@@ -13,6 +13,7 @@ class User():
         User.player_count += 1
         self.id = User.player_count
         self.hand = pygame.sprite.Group(hand)
+        self.onTurn = False
 
     def play_card(self, to: "User", card: Card):
         self.remove_card(card)
@@ -36,3 +37,10 @@ class User():
 
     def getCardCount(self):
         return len(self.hand)
+    
+    def update(self, playing):
+        if self.onTurn:
+            for c in self.hand:
+                c.show = True
+                if c.clicked():
+                    self.play_card(playing, c)

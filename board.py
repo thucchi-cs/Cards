@@ -3,9 +3,12 @@ from cards import Card
 from users import User
 
 class Board():
-    cards = Card.generate_cards()
+    pygame.font.init()
+    font = pygame.font.Font("./assets/fonts/Orbitron-Medium.ttf", 15)
+    cards = Card.generate_cards(font)
     house = User(cards)
-    discard = User(cards)
+    playing = User()
+    discard = User()
     users = []
     player_num = 3 # get user input
     cards_per_player = 7 # get user input
