@@ -23,12 +23,12 @@ run = True
 while run:
     # Update fps
     clock.tick(FPS)
-    
+
     for event in pygame.event.get():
         # Check to close game
         if event.type == pygame.QUIT:
             run = False
-        
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
                 run = False

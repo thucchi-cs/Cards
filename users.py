@@ -1,8 +1,11 @@
 import pygame
 from cards import Card
+import uuid
+from random import shuffle
 
 class User():
     player_count = 0
+    id: uuid = uuid.uuid4()
 
     def __init__(self, hand: list):
         super().__init__()
@@ -24,3 +27,6 @@ class User():
     
     def remove_card(self, card: Card):
         self.hand.remove(card)
+
+    def shufleHand(self):
+        shuffle(self.hand)

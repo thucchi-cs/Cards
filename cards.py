@@ -1,4 +1,5 @@
 import pygame
+from random import *
 
 class Card(pygame.sprite.Sprite):
     suits = ["spade", "heart", "diamond", "club"]
@@ -28,6 +29,3 @@ class Card(pygame.sprite.Sprite):
 
     def __str__(self):
         return str(self.value) + " " + self.suit 
-    
-    def shuffle_cards():
-        pass
