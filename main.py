@@ -3,6 +3,7 @@ import socket
 import threading
 from _thread import start_new_thread
 from board import Board  # Your Board module, assumed to exist
+import json
 
 # ------------------------ Server utilities ------------------------
 
@@ -60,12 +61,30 @@ def initialize_game_from_player(conn):
         print("Error:", e)
         return False
 
+
+clients = []  # store all connected clients
+game_state = {
+    "player_positions": {},  # example variable to share
+    "turn": 1
+}
+
+def broadcast(data, exclude=None):
+    """Send data to all connected clients, except one if exclude is set."""
+    for c in clients:
+        if c != exclude:
+            try:
+                c.sendall(json.dumps(data).encode())
+            except:
+                pass
+
 def client_thread(conn, player_id):
+    clients.append(conn)
     conn.sendall(f"You are Player {player_id}\n".encode())
 
     if player_id == 1:
         success = initialize_game_from_player(conn)
         if not success:
+            clients.remove(conn)
             return
 
     while True:
@@ -73,11 +92,28 @@ def client_thread(conn, player_id):
             data = conn.recv(1024).decode()
             if not data:
                 break
-            print(f"Player {player_id} says: {data}")
+
+            try:
+                # Expecting JSON from clients
+                packet = json.loads(data)
+                print(f"Player {player_id} sent: {packet}")
+
+                # Update server game state
+                if "position" in packet:
+                    game_state["player_positions"][player_id] = packet["position"]
+
+                # Send updated game state to all players
+                broadcast({"type": "update_state", "state": game_state}, exclude=conn)
+
+            except json.JSONDecodeError:
+                print(f"Invalid JSON from Player {player_id}: {data}")
+
         except:
             break
 
     conn.close()
+    clients.remove(conn)
+
 
 # ------------------------ Server Thread ------------------------
 
